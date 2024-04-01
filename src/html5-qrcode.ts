@@ -363,7 +363,7 @@ export class Html5Qrcode {
     ): Promise<null> {
 
         // Code will be consumed as javascript.
-        if (!cameraIdOrConfig) {
+       if (!cameraIdOrConfig) {
             throw "cameraIdOrConfig is required";
         }
 
