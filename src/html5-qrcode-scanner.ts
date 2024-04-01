@@ -795,7 +795,7 @@ export class Html5QrcodeScanner {
                     { display: "none", marginLeft: "5px" },
                     // Callback in case of torch action failure.
                     (errorMessage) => {
-                        $this.torchButtonErrorCallback(Html5QrcodeErrorFactory.createFrom(errorMessage))
+                        $this.torchButtonErrorCallback(Html5QrcodeErrorFactory.createFrom(errorMessage));
                     }
                 );
             } else {
@@ -1013,6 +1013,7 @@ export class Html5QrcodeScanner {
         messageDiv.style.display = "none";
     }
 
+    /*eslint complexity: ["error", 5]*/
     public setHeaderMessage(
         messageText: string, scannerStatus?: Html5QrcodeScannerStatus) {
         if (!scannerStatus) {
