@@ -200,6 +200,8 @@ export class Html5QrcodeScanner {
 
     public startErrorCallback: StartErrorCallback;
     public torchButtonErrorCallback: StartErrorCallback;
+    public getCamaraErrorCallback: StartErrorCallback;
+    public clickListenerErrorCallback: StartErrorCallback;
     //#endregion
 
     /**
@@ -241,6 +243,8 @@ export class Html5QrcodeScanner {
 
         this.startErrorCallback = warnUserViaHeader;
         this.torchButtonErrorCallback = warnUserViaHeader;
+        this.getCamaraErrorCallback = warnUserViaHeader;
+        this.clickListenerErrorCallback = warnUserViaHeader;
     }
 
     /**
@@ -597,7 +601,7 @@ export class Html5QrcodeScanner {
                 // time.
                 createPermissionButtonIfNotExists();
             }
-            $this.startErrorCallback(error);
+            $this.getCamaraErrorCallback(error);
             $this.showHideScanTypeSwapLink(true);
         });
     }
@@ -864,8 +868,7 @@ export class Html5QrcodeScanner {
                     $this.showHideScanTypeSwapLink(true);
                     cameraSelectUi.enable();
                     resetCameraActionStartButton(/* shouldShow= */ true);
-                    $this.setHeaderMessage(
-                        error, Html5QrcodeScannerStatus.STATUS_WARNING);
+                    $this.startErrorCallback(error);
                 });
         });
 
@@ -901,8 +904,7 @@ export class Html5QrcodeScanner {
                     $this.insertCameraScanImageToScanRegion();
                 }).catch((error) => {
                     cameraActionStopButton.disabled = false;
-                    $this.setHeaderMessage(
-                        error, Html5QrcodeScannerStatus.STATUS_WARNING);
+                    $this.clickListenerErrorCallback(error);
                 });
         });
 
