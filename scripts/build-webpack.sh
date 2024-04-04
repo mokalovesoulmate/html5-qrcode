@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 ## Build Script
 echo 'Initiating webpack build sequence.'
 
