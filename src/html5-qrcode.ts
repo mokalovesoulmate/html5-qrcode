@@ -1382,19 +1382,38 @@ export class Html5Qrcode {
             amount = 1;
         }
         const { height, width } = context.canvas;
+        // getImageData throws an IndexSizeError if width or height is 0.
+        // Guard against this case to prevent an unhandled exception.
+        if (width === 0 || height === 0) {
+            this.logger.warn(
+                `Canvas width (${width}) or height (${height}) is 0, cannot invert.`);
+            return context;
+        }
         const imageData = context.getImageData(0, 0, width, height);
-        const { data } = imageData;
-        const { length } = data;
+        const pixelData = imageData.data;
+
+        // Ensure pixelData is available. According to the spec, ImageData.data is
+        // a Uint8ClampedArray and should not be null or undefined. This check
+        // satisfies TypeScript if it has concerns about its nullability.
+        if (!pixelData) {
+            this.logger.warn("ImageData.data is not available, cannot invert.");
+            return context;
+        }
+        const { length } = pixelData;
 
         // in rgba world, every
         // n * 4 + 0 is red,
         // n * 4 + 1 green and
         // n * 4 + 2 is blue
         // the fourth can be skipped as it's the alpha channel
-        for (let i = 0; i < length; i += 4) {
-            data[i + 0] = Math.abs(data[i + 0] - 255 * amount);
-            data[i + 1] = Math.abs(data[i + 1] - 255 * amount);
-            data[i + 2] = Math.abs(data[i + 2] - 255 * amount);
+        // Change loop condition: ensure i + 2 is also less than length.
+        // Since length is always a multiple of 4 (width * height * 4),
+        // and i increments by 4, this condition is equivalent to i < length
+        // for the number of iterations but might be clearer for TypeScript.
+        for (let i = 0; i + 2 < length; i += 4) {
+            pixelData[i + 0] = Math.abs(pixelData[i + 0]! - 255 * amount);
+            pixelData[i + 1] = Math.abs(pixelData[i + 1]! - 255 * amount);
+            pixelData[i + 2] = Math.abs(pixelData[i + 2]! - 255 * amount);
         }
 
         // set back image data to context
