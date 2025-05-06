@@ -253,6 +253,9 @@ export type QrcodeSuccessCallback
 export type QrcodeErrorCallback
     = (errorMessage: string, error: Html5QrcodeError) => void;
 
+export type StartErrorCallback
+    = (error: Html5QrcodeError) => void;
+
 /** Code decoder interface. */
 export interface QrcodeDecoderAsync {
     /**
